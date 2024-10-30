@@ -29,8 +29,8 @@ output "public_route_table_id" {
 }
 
 output "private_route_table_ids" {
-  description = "The ID of the private route table"
-  value       = aws_route_table.private_route_table.id
+  description = "The IDs of the private route table"
+  value       = aws_route_table.private_route_tables[*].id
 }
 
 output "internet_gateway_id" {
@@ -38,7 +38,7 @@ output "internet_gateway_id" {
   value       = aws_internet_gateway.gateway.id
 }
 
-output "nat_gateway_id" {
-  description = "The ID of the NAT gateway"
-  value       = aws_nat_gateway.nat_gateway.id
+output "nat_gateways_id" {
+  description = "The IDs of the NAT gateways"
+  value       = aws_nat_gateway.nat_gateways[*].id
 }

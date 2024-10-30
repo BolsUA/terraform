@@ -70,34 +70,37 @@ resource "aws_route_table_association" "public_subnet_associations" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
-# Create an Elastic IP for NAT Gateway
-resource "aws_eip" "nat_eip" {
+# Create Elastic IPs for NAT Gateways
+resource "aws_eip" "nat_eips" {
+  count      = length(var.availability_zones)
   depends_on = [aws_internet_gateway.gateway]
 }
 
-# Create a NAT Gateway in the first public subnet
-resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnets[0].id
-  depends_on    = [aws_eip.nat_eip]
+# Create NAT Gateways in each public subnet
+resource "aws_nat_gateway" "nat_gateways" {
+  count         = length(var.availability_zones)
+  allocation_id = aws_eip.nat_eips[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
+  depends_on    = [aws_eip.nat_eips]
 
   tags = {
-    Name = "${var.app_name}-nat-gateway"
+    Name = "${var.app_name}-nat-gateway-${count.index}"
     Environment = var.environment
   }
 }
 
 # Create a route table for private subnets for internet access
-resource "aws_route_table" "private_route_table" {
+resource "aws_route_table" "private_route_tables" {
+  count  = length(aws_subnet.private_subnets)
   vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat_gateway.id
+    gateway_id = aws_nat_gateway.nat_gateways[count.index].id
   }
 
   tags = {
-    Name = "${var.app_name}-private-route-table"
+    Name = "${var.app_name}-private-route-table-${count.index}"
     Environment = var.environment
   }
 }
@@ -106,5 +109,5 @@ resource "aws_route_table" "private_route_table" {
 resource "aws_route_table_association" "private_subnet_associations" {
   count          = length(aws_subnet.private_subnets)
   subnet_id      = aws_subnet.private_subnets[count.index].id
-  route_table_id = aws_route_table.private_route_table.id
+  route_table_id = aws_route_table.private_route_tables[count.index].id
 }
