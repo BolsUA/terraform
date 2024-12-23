@@ -17,12 +17,12 @@ variable "region" {
 variable "callback_urls" {
   type        = list(string)
   description = "Callback URLs for the Cognito User Pool Client"
-  default     = ["https://bolsua.pt/api/auth/callback/cognito"]
+  default     = ["http://localhost:3000/api/auth/callback/cognito"]
 }
 
 # Logout URLs
 variable "logout_urls" {
   type        = list(string)
   description = "Logout URLs for the Cognito User Pool Client"
-  default     = ["https://bolsua.pt"]
+  default     = ["http://localhost:3000"]
 }
