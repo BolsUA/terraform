@@ -61,10 +61,25 @@ output "grading_applications_dlq_arn" {
   value       = var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : null
 }
 
-# IAM User credentials for the queue
-output "queue_access_key_id" {
-  description = "The access key ID for the IAM user for the queue"
-  value       = aws_iam_access_key.queue_user.id
+# Notifications Queue
+output "notifications_queue_url" {
+  description = "The URL of the Notifications queue"
+  value       = aws_sqs_queue.notifications.url
+}
+
+output "notifications_queue_arn" {
+  description = "The ARN of the Notifications queue"
+  value       = aws_sqs_queue.notifications.arn
+}
+
+output "notifications_dlq_url" {
+  description = "The URL of the Notifications DLQ"
+  value       = var.enable_dlq ? aws_sqs_queue.notifications_dlq[0].url : null
+}
+
+output "notifications_dlq_arn" {
+  description = "The ARN of the Notifications DLQ"
+  value       = var.enable_dlq ? aws_sqs_queue.notifications_dlq[0].arn : null
 }
 
 # SQS Policy ARN
