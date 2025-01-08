@@ -61,27 +61,6 @@ output "grading_applications_dlq_arn" {
   value       = var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : null
 }
 
-# Notifications Queue
-output "notifications_queue_url" {
-  description = "The URL of the Notifications queue"
-  value       = aws_sqs_queue.notifications.url
-}
-
-output "notifications_queue_arn" {
-  description = "The ARN of the Notifications queue"
-  value       = aws_sqs_queue.notifications.arn
-}
-
-output "notifications_dlq_url" {
-  description = "The URL of the Notifications DLQ"
-  value       = var.enable_dlq ? aws_sqs_queue.notifications_dlq[0].url : null
-}
-
-output "notifications_dlq_arn" {
-  description = "The ARN of the Notifications DLQ"
-  value       = var.enable_dlq ? aws_sqs_queue.notifications_dlq[0].arn : null
-}
-
 # SQS Policy ARN
 output "sqs_policy_arn" {
   description = "The ARN of the SQS policy"

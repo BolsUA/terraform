@@ -100,40 +100,6 @@ resource "aws_sqs_queue" "grading_applications_dlq" {
   }
 }
 
-# Notifications Queue
-resource "aws_sqs_queue" "notifications" {
-  name = "${var.app_name}-notifications-queue-${var.environment}"
-
-  delay_seconds              = var.delay_seconds
-  max_message_size           = var.max_message_size
-  message_retention_seconds  = var.retention_seconds
-  receive_wait_time_seconds  = var.receive_wait_time_seconds
-  visibility_timeout_seconds = var.visibility_timeout
-
-  redrive_policy = var.enable_dlq ? jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.notifications_dlq[0].arn
-    maxReceiveCount     = var.max_receive_count
-  }) : null
-
-  tags = {
-    Name        = "${var.app_name}-notifications-queue"
-    Environment = var.environment
-  }
-}
-
-# Notifications DLQ (Dead Letter Queue)
-resource "aws_sqs_queue" "notifications_dlq" {
-  count = var.enable_dlq ? 1 : 0
-
-  name                      = "${var.app_name}-notifications-dlq-${var.environment}"
-  message_retention_seconds = var.dlq_retention_seconds
-
-  tags = {
-    Name        = "${var.app_name}-notifications-dlq"
-    Environment = var.environment
-  }
-}
-
 resource "aws_iam_policy" "queue_policy" {
   name = "${var.app_name}-queue-policy-${var.environment}"
 
@@ -153,11 +119,9 @@ resource "aws_iam_policy" "queue_policy" {
           aws_sqs_queue.scholarships_applications.arn,
           aws_sqs_queue.applications_grading.arn,
           aws_sqs_queue.grading_applications.arn,
-          aws_sqs_queue.notifications.arn,
           var.enable_dlq ? aws_sqs_queue.scholarships_applications_dlq[0].arn : "",
           var.enable_dlq ? aws_sqs_queue.applications_grading_dlq[0].arn : "",
-          var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : "",
-          var.enable_dlq ? aws_sqs_queue.notifications_dlq[0].arn : ""
+          var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : ""
         ]
       }
     ]
