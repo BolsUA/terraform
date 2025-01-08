@@ -43,6 +43,18 @@ variable "cloudwatch_logs" {
   description = "CloudWatch Logs ARN"
 }
 
+# S3 Bucket Policy ARN
+variable "s3_bucket_policy_arn" {
+  type        = string
+  description = "S3 Bucket Policy ARN"
+}
+
+# SQS Policy ARN
+variable "sqs_policy_arn" {
+  type        = string
+  description = "SQS Policy ARN"
+}
+
 # Frontend variables
 variable "frontend_repository_url" {
   type        = string

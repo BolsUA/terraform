@@ -108,9 +108,8 @@ resource "aws_iam_access_key" "queue_user" {
   user = aws_iam_user.queue_user.name
 }
 
-resource "aws_iam_user_policy" "queue_policy" {
+resource "aws_iam_policy" "queue_policy" {
   name = "${var.app_name}-queue-policy-${var.environment}"
-  user = aws_iam_user.queue_user.name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -121,15 +120,16 @@ resource "aws_iam_user_policy" "queue_policy" {
           "sqs:SendMessage",
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
+          "sqs:GetQueueUrl",
           "sqs:GetQueueAttributes"
         ]
         Resource = [
           aws_sqs_queue.scholarships_applications.arn,
-		  aws_sqs_queue.applications_grading.arn,
-		  aws_sqs_queue.grading_applications.arn,
+          aws_sqs_queue.applications_grading.arn,
+          aws_sqs_queue.grading_applications.arn,
           var.enable_dlq ? aws_sqs_queue.scholarships_applications_dlq[0].arn : "",
           var.enable_dlq ? aws_sqs_queue.applications_grading_dlq[0].arn : "",
-		  var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : ""
+          var.enable_dlq ? aws_sqs_queue.grading_applications_dlq[0].arn : ""
         ]
       }
     ]

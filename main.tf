@@ -113,6 +113,8 @@ module "ecs" {
   private_subnet_ids             = module.networking.private_subnet_ids
 
   cloudwatch_logs = module.cloudwatch.cloudwatch_logs_arn
+  s3_bucket_policy_arn = module.s3.s3_bucket_policy_arn
+  sqs_policy_arn = module.sqs.sqs_policy_arn
 
   frontend_repository_url   = module.ecr.frontend_repository_url
   frontend_port             = var.frontend_port

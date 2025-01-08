@@ -7,17 +7,8 @@ resource "aws_s3_bucket" "main" {
   }
 }
 
-resource "aws_iam_user" "bucket_user" {
-  name = "${var.app_name}-bucket-user-${var.environment}"
-}
-
-resource "aws_iam_access_key" "bucket_user" {
-  user = aws_iam_user.bucket_user.name
-}
-
-resource "aws_iam_user_policy" "bucket_policy" {
+resource "aws_iam_policy" "bucket_policy" {
   name = "${var.app_name}-bucket-policy-${var.environment}"
-  user = aws_iam_user.bucket_user.name
 
   policy = jsonencode({
     Version = "2012-10-17"

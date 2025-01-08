@@ -67,8 +67,8 @@ output "queue_access_key_id" {
   value       = aws_iam_access_key.queue_user.id
 }
 
-output "queue_secret_access_key" {
-  description = "The secret access key for the IAM user for the queue"
-  value       = aws_iam_access_key.queue_user.secret
-  sensitive   = true
+# SQS Policy ARN
+output "sqs_policy_arn" {
+  description = "The ARN of the SQS policy"
+  value       = aws_iam_policy.queue_policy.arn
 }
