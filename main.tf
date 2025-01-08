@@ -33,6 +33,13 @@ module "s3" {
   environment = var.environment
 }
 
+module "sqs" {
+  source = "./modules/sqs"
+
+  app_name    = var.app_name
+  environment = var.environment
+}
+
 module "database" {
   source = "./modules/database"
 
