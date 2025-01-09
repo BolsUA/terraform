@@ -54,6 +54,12 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_sqs" {
   policy_arn = var.sqs_policy_arn
 }
 
+# Attach the SES policy to the task execution role
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ses" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.ses_policy_arn
+}
+
 # Security Group
 resource "aws_security_group" "ecs_tasks" {
   name        = "${var.app_name}-ecs-tasks-sg-${var.environment}"

@@ -55,6 +55,12 @@ variable "sqs_policy_arn" {
   description = "SQS Policy ARN"
 }
 
+# SES Policy ARN
+variable "ses_policy_arn" {
+  type        = string
+  description = "SES Policy ARN"
+}
+
 # Frontend variables
 variable "frontend_repository_url" {
   type        = string

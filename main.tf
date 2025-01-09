@@ -40,6 +40,13 @@ module "sqs" {
   environment = var.environment
 }
 
+module "ses" {
+  source = "./modules/ses"
+
+  app_name    = var.app_name
+  environment = var.environment
+}
+
 module "database" {
   source = "./modules/database"
 
@@ -115,6 +122,7 @@ module "ecs" {
   cloudwatch_logs = module.cloudwatch.cloudwatch_logs_arn
   s3_bucket_policy_arn = module.s3.s3_bucket_policy_arn
   sqs_policy_arn = module.sqs.sqs_policy_arn
+  ses_policy_arn = module.ses.ses_policy_arn
 
   frontend_repository_url   = module.ecr.frontend_repository_url
   frontend_port             = var.frontend_port
