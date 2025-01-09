@@ -36,33 +36,39 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-# Attach the Cognito policy to the task execution role
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_cognito" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.cognito_policy_arn
-}
-
 # Attach the CloudWatch Logs policy to the task execution role
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_cloudwatch" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = var.cloudwatch_policy_arn
 }
 
-# Attach the S3 bucket policy to the task execution role
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_s3" {
-  role       = aws_iam_role.ecs_task_execution_role.name
+# Task Role
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "${var.app_name}-ecs-task-role-${var.environment}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role_policy.json
+}
+
+# Attach the Cognito policy to the task role
+resource "aws_iam_role_policy_attachment" "ecs_task_role_cognito" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = var.cognito_policy_arn
+}
+
+# Attach the S3 bucket policy to the task role
+resource "aws_iam_role_policy_attachment" "ecs_task_role_s3" {
+  role       = aws_iam_role.ecs_task_role.name
   policy_arn = var.s3_bucket_policy_arn
 }
 
-# Attach the SQS policy to the task execution role
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_sqs" {
-  role       = aws_iam_role.ecs_task_execution_role.name
+# Attach the SQS policy to the task role
+resource "aws_iam_role_policy_attachment" "ecs_task_role_sqs" {
+  role       = aws_iam_role.ecs_task_role.name
   policy_arn = var.sqs_policy_arn
 }
 
-# Attach the SES policy to the task execution role
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ses" {
-  role       = aws_iam_role.ecs_task_execution_role.name
+# Attach the SES policy to the task role
+resource "aws_iam_role_policy_attachment" "ecs_task_role_ses" {
+  role       = aws_iam_role.ecs_task_role.name
   policy_arn = var.ses_policy_arn
 }
 
@@ -107,6 +113,7 @@ resource "aws_ecs_task_definition" "frontend" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -170,6 +177,7 @@ resource "aws_ecs_task_definition" "scholarships_backend" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -225,6 +233,7 @@ resource "aws_ecs_task_definition" "applications_backend" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -288,6 +297,7 @@ resource "aws_ecs_task_definition" "grading_selection_backend" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
