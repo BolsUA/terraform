@@ -38,9 +38,9 @@ variable "private_subnet_ids" {
 }
 
 # CloudWatch Logs ARN
-variable "cloudwatch_logs" {
+variable "cloudwatch_policy_arn" {
   type        = string
-  description = "CloudWatch Logs ARN"
+  description = "CloudWatch Logs Policy ARN"
 }
 
 # S3 Bucket Policy ARN
@@ -119,7 +119,64 @@ variable "scholarships_db_connection_string" {
   description = "Scholarships RDS connection string"
 }
 
+variable "scholarships_applications_queue_url" {
+  type        = string
+  description = "The URL of the Scholarships to Applications queue"
+}
+
 variable "scholarships_backend_target_group_arn" {
   type        = string
   description = "Scholarships backend target group ARN"
+}
+
+# Applications backend variables
+variable "applications_backend_repository_url" {
+  type        = string
+  description = "ECR Repository URL for the applications backend"
+}
+
+variable "applications_backend_port" {
+  type        = number
+  description = "Applications backend port for the ECS service"
+}
+
+variable "applications_db_connection_string" {
+  type        = string
+  description = "Applications RDS connection string"
+}
+
+variable "applications_grading_queue_url" {
+  type        = string
+  description = "The URL of the Applications to Grading queue"
+}
+
+variable "applications_backend_target_group_arn" {
+  type        = string
+  description = "Applications backend target group ARN"
+}
+
+# Grading selection backend variables
+variable "grading_selection_backend_repository_url" {
+  type        = string
+  description = "ECR Repository URL for the grading and selection backend"
+}
+
+variable "grading_selection_backend_port" {
+  type        = number
+  description = "Grading and selection backend port for the ECS service"
+}
+
+variable "grading_selection_db_connection_string" {
+  type        = string
+  description = "Grading and selection RDS connection string"
+}
+
+variable "grading_applications_queue_url" {
+  type        = string
+  description = "The URL of the Grading to Applications queue"
+}
+
+variable "grading_selection_backend_target_group_arn" {
+  type        = string
+  description = "Grading and selection backend target group ARN"
 }

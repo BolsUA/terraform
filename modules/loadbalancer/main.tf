@@ -128,6 +128,32 @@ resource "aws_lb_target_group" "scholarships_backend_tg" {
   }
 }
 
+# Applications Service Target Group
+resource "aws_lb_target_group" "applications_backend_tg" {
+  name        = "${var.app_name}-applications-tg-${var.environment}"
+  port        = var.applications_backend_port
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path = "/health"
+  }
+}
+
+# Grading and Selection Service Target Group
+resource "aws_lb_target_group" "grading_selection_backend_tg" {
+  name        = "${var.app_name}-grading-sel-tg-${var.environment}"
+  port        = var.grading_selection_backend_port
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path = "/health"
+  }
+}
+
 # ALB Listeners
 
 # Default Listener
@@ -151,6 +177,30 @@ resource "aws_lb_listener" "internal_listener_http" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.scholarships_backend_tg.arn
+  }
+}
+
+# Internal HTTP Listener for the Applications Service
+resource "aws_lb_listener" "internal_listener_applications" {
+  load_balancer_arn = aws_lb.internal_main.arn
+  port              = var.applications_backend_port
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.applications_backend_tg.arn
+  }
+}
+
+# Internal HTTP Listener for the Grading Selection Service
+resource "aws_lb_listener" "internal_listener_grading_selection" {
+  load_balancer_arn = aws_lb.internal_main.arn
+  port              = var.grading_selection_backend_port
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.grading_selection_backend_tg.arn
   }
 }
 

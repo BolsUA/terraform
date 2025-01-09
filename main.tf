@@ -114,10 +114,10 @@ module "ecs" {
   internal_alb_security_group_id = module.loadbalancer.internal_alb_security_group_id
   private_subnet_ids             = module.networking.private_subnet_ids
 
-  cloudwatch_logs = module.cloudwatch.cloudwatch_logs_arn
-  s3_bucket_policy_arn = module.s3.s3_bucket_policy_arn
-  sqs_policy_arn = module.sqs.sqs_policy_arn
-  ses_policy_arn = module.ses.ses_policy_arn
+  cloudwatch_policy_arn = module.cloudwatch.cloudwatch_policy_arn
+  s3_bucket_policy_arn  = module.s3.s3_bucket_policy_arn
+  sqs_policy_arn        = module.sqs.sqs_policy_arn
+  ses_policy_arn        = module.ses.ses_policy_arn
 
   frontend_repository_url   = module.ecr.frontend_repository_url
   frontend_port             = var.frontend_port
@@ -131,17 +131,20 @@ module "ecs" {
   scholarships_backend_repository_url   = module.ecr.scholarships_backend_repository_url
   scholarships_backend_port             = var.scholarships_backend_port
   scholarships_db_connection_string     = module.database.scholarships_db_connection_string
+  scholarships_applications_queue_url   = module.sqs.scholarships_applications_queue_url
   scholarships_backend_target_group_arn = module.loadbalancer.scholarships_backend_target_group_arn
 
-  # applications_backend_repository_url   = module.ecr.applications_backend_repository_url
-  # applications_backend_port             = var.applications_backend_port
-  # applications_db_connection_string     = module.database.applications_db_connection_string
-  # applications_backend_target_group_arn = module.loadbalancer.applications_backend_target_group_arn
+  applications_backend_repository_url   = module.ecr.applications_backend_repository_url
+  applications_backend_port             = var.applications_backend_port
+  applications_db_connection_string     = module.database.applications_db_connection_string
+  applications_grading_queue_url        = module.sqs.applications_grading_queue_url
+  applications_backend_target_group_arn = module.loadbalancer.applications_backend_target_group_arn
 
-  # grading_selection_backend_repository_url   = module.ecr.grading_selection_backend_repository_url
-  # grading_selection_backend_port             = var.grading_selection_backend_port
-  # grading_selection_db_connection_string     = module.database.grading_selection_db_connection_string
-  # grading_selection_backend_target_group_arn = module.loadbalancer.grading_selection_backend_target_group_arn
+  grading_selection_backend_repository_url   = module.ecr.grading_selection_backend_repository_url
+  grading_selection_backend_port             = var.grading_selection_backend_port
+  grading_selection_db_connection_string     = module.database.grading_selection_db_connection_string
+  grading_applications_queue_url             = module.sqs.grading_applications_queue_url
+  grading_selection_backend_target_group_arn = module.loadbalancer.grading_selection_backend_target_group_arn
 }
 
 module "api_gateway" {

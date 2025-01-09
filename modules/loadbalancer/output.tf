@@ -22,3 +22,13 @@ output "scholarships_backend_target_group_arn" {
   description = "Backend target group ARN"
   value       = aws_lb_target_group.scholarships_backend_tg.arn
 }
+
+output "applications_backend_target_group_arn" {
+  description = "Backend target group ARN"
+  value       = aws_lb_target_group.applications_backend_tg.arn
+}
+
+output "grading_selection_backend_target_group_arn" {
+  description = "Backend target group ARN"
+  value       = aws_lb_target_group.grading_selection_backend_tg.arn
+}

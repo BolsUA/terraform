@@ -1,6 +1,6 @@
-output "cloudwatch_logs_arn" {
+output "cloudwatch_policy_arn" {
   description = "The ARN of the CloudWatch Logs policy"
-  value       = aws_iam_policy.cloudwatch_logs.arn
+  value       = aws_iam_policy.cloudwatch_policy.arn
 }
 
 output "cloudwatch_frontend_log_group_arn" {

@@ -1,5 +1,5 @@
 # CloudWatch Logs Policy
-resource "aws_iam_policy" "cloudwatch_logs" {
+resource "aws_iam_policy" "cloudwatch_policy" {
   name = "${var.app_name}-cloudwatch-logs-policy-${var.environment}"
 
   policy = jsonencode({

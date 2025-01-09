@@ -39,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 # Attach the CloudWatch Logs policy to the task execution role
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_cloudwatch" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.cloudwatch_logs
+  policy_arn = var.cloudwatch_policy_arn
 }
 
 # Attach the S3 bucket policy to the task execution role
@@ -156,7 +156,7 @@ resource "aws_ecs_task_definition" "frontend" {
   ])
 }
 
-# Backend ECS Task Definition
+# Scholarships Backend ECS Task Definition
 resource "aws_ecs_task_definition" "scholarships_backend" {
   family                   = "${var.app_name}-scholarships-backend-${var.environment}"
   network_mode             = "awsvpc"
@@ -181,12 +181,150 @@ resource "aws_ecs_task_definition" "scholarships_backend" {
         {
           name  = "DATABASE_URL"
           value = var.scholarships_db_connection_string
+        },
+        {
+          name  = "REGION"
+          value = var.region
+        },
+        {
+          name  = "USER_POOL_ID",
+          value = var.auth_cognito_user_pool_id
+        },
+        {
+          name  = "FRONTEND_URL",
+          value = "https://bolsua.pt"
+        },
+        {
+          name  = "QUEUE_URL",
+          value = var.scholarships_applications_queue_url
         }
       ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
           "awslogs-group"         = "/ecs/${var.app_name}-scholarships-backend-${var.environment}"
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
+    }
+  ])
+}
+
+# Application Backend ECS Task Definition
+resource "aws_ecs_task_definition" "applications_backend" {
+  family                   = "${var.app_name}-applications-backend-${var.environment}"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "applications-backend"
+      image     = "${var.applications_backend_repository_url}:latest"
+      essential = true
+      portMappings = [
+        {
+          containerPort = var.applications_backend_port
+          hostPort      = var.applications_backend_port
+          protocol      = "tcp"
+        }
+      ]
+      environment = [
+        {
+          name  = "DATABASE_URL"
+          value = var.applications_db_connection_string
+        },
+        {
+          name  = "REGION"
+          value = var.region
+        },
+        {
+          name  = "USER_POOL_ID",
+          value = var.auth_cognito_user_pool_id
+        },
+        {
+          name  = "FRONTEND_URL",
+          value = "https://bolsua.pt"
+        },
+        {
+          name  = "DEADLINE_QUEUE_URL",
+          value = var.scholarships_applications_queue_url
+        },
+        {
+          name  = "TO_GRADING_QUEUE_URL",
+          value = var.applications_grading_queue_url
+        },
+        {
+          name  = "APP_GRADING_QUEUE_URL",
+          value = var.grading_applications_queue_url
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/ecs/${var.app_name}-applications-backend-${var.environment}"
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
+    }
+  ])
+}
+
+# Grading and Selection Backend ECS Task Definition
+resource "aws_ecs_task_definition" "grading_selection_backend" {
+  family                   = "${var.app_name}-grading-selection-backend-${var.environment}"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "grading-selection-backend"
+      image     = "${var.grading_selection_backend_repository_url}:latest"
+      essential = true
+      portMappings = [
+        {
+          containerPort = var.grading_selection_backend_port
+          hostPort      = var.grading_selection_backend_port
+          protocol      = "tcp"
+        }
+      ]
+      environment = [
+        {
+          name  = "DATABASE_URL"
+          value = var.grading_selection_db_connection_string
+        },
+        {
+          name  = "REGION"
+          value = var.region
+        },
+        {
+          name  = "USER_POOL_ID",
+          value = var.auth_cognito_user_pool_id
+        },
+        {
+          name  = "FRONTEND_URL",
+          value = "https://bolsua.pt"
+        },
+        {
+          name  = "TO_GRADING_QUEUE_URL",
+          value = var.applications_grading_queue_url
+        },
+        {
+          name  = "APP_GRADING_QUEUE_URL",
+          value = var.grading_applications_queue_url
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/ecs/${var.app_name}-grading-selection-backend-${var.environment}"
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs"
         }
@@ -216,7 +354,7 @@ resource "aws_ecs_service" "frontend" {
   }
 }
 
-# Backend ECS Service
+# Scholarships Backend ECS Service
 resource "aws_ecs_service" "scholarships_backend" {
   name            = "${var.app_name}-scholarships-backend-service-${var.environment}"
   cluster         = aws_ecs_cluster.main.id
@@ -234,5 +372,47 @@ resource "aws_ecs_service" "scholarships_backend" {
     target_group_arn = var.scholarships_backend_target_group_arn
     container_name   = "scholarships-backend"
     container_port   = var.scholarships_backend_port
+  }
+}
+
+# Application Backend ECS Service
+resource "aws_ecs_service" "applications_backend" {
+  name            = "${var.app_name}-applications-backend-service-${var.environment}"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.applications_backend.arn
+  launch_type     = "FARGATE"
+  desired_count   = 2
+
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [aws_security_group.ecs_tasks.id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = var.applications_backend_target_group_arn
+    container_name   = "applications-backend"
+    container_port   = var.applications_backend_port
+  }
+}
+
+# Grading and Selection Backend ECS Service
+resource "aws_ecs_service" "grading_selection_backend" {
+  name            = "${var.app_name}-grading-selection-backend-service-${var.environment}"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.grading_selection_backend.arn
+  launch_type     = "FARGATE"
+  desired_count   = 2
+
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [aws_security_group.ecs_tasks.id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = var.grading_selection_backend_target_group_arn
+    container_name   = "grading-selection-backend"
+    container_port   = var.grading_selection_backend_port
   }
 }

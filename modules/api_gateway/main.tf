@@ -98,43 +98,125 @@ resource "aws_apigatewayv2_integration" "scholarships" {
   connection_id      = aws_apigatewayv2_vpc_link.main.id
 }
 
-# Routes configuration
-
-# OPTIONS route for CORS
-# resource "aws_apigatewayv2_route" "scholarships_options" {
-#   api_id    = aws_apigatewayv2_api.main.id
-#   route_key = "OPTIONS /scholarships/{proxy+}"
-#   target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
-# }
-
-# Regular route with JWT authorization for all other methods
-resource "aws_apigatewayv2_route" "scholarships" {
+resource "aws_apigatewayv2_integration" "applications" {
   api_id             = aws_apigatewayv2_api.main.id
-  route_key          = "ANY /{proxy+}"
-  target             = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
-  # authorization_type = "JWT"
-  # authorizer_id      = aws_apigatewayv2_authorizer.main.id
+  integration_type   = "HTTP_PROXY"
+  integration_uri    = var.alb_internal_listener_http_arn
+  integration_method = "ANY"
+  connection_type    = "VPC_LINK"
+  connection_id      = aws_apigatewayv2_vpc_link.main.id
 }
 
-# resource "aws_apigatewayv2_route" "scholarships2" {
-#   api_id             = aws_apigatewayv2_api.main.id
-#   route_key          = "ANY /scholarships"
-#   target             = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
-#   # authorization_type = "JWT"
-#   # authorizer_id      = aws_apigatewayv2_authorizer.main.id
-# }
+resource "aws_apigatewayv2_integration" "grading_selection" {
+  api_id             = aws_apigatewayv2_api.main.id
+  integration_type   = "HTTP_PROXY"
+  integration_uri    = var.alb_internal_listener_http_arn
+  integration_method = "ANY"
+  connection_type    = "VPC_LINK"
+  connection_id      = aws_apigatewayv2_vpc_link.main.id
+}
 
-# resource "aws_apigatewayv2_route" "docs" {
-#   api_id             = aws_apigatewayv2_api.main.id
-#   route_key          = "ANY /docs"
-#   target             = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
-#   # authorization_type = "JWT"
-#   # authorizer_id      = aws_apigatewayv2_authorizer.main.id
-# }
+# Routes configuration
+
+# Scholarships Service
+
+# OPTIONS route for CORS
+resource "aws_apigatewayv2_route" "scholarships_options" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "OPTIONS /scholarships/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Get Public Scholarships route
+resource "aws_apigatewayv2_route" "scholarships" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /scholarships/"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Get Filters route
+resource "aws_apigatewayv2_route" "scholarships_filters" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /scholarships/filters"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Get Scholarship details
+resource "aws_apigatewayv2_route" "scholarships_details" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /scholarships/{id}/details"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Put scholarship into jury evaluation (Testing purposes)
+resource "aws_apigatewayv2_route" "scholarships_jury_evaluation" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "PUT /scholarships/{id}/status/jury_evaluation"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Regular route with JWT authorization for all other methods
+resource "aws_apigatewayv2_route" "scholarships_protected" {
+  api_id             = aws_apigatewayv2_api.main.id
+  route_key          = "ANY /scholarships/{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.main.id
+}
 
 # Health check route
 resource "aws_apigatewayv2_route" "scholarships_health" {
-  api_id     = aws_apigatewayv2_api.main.id
-  route_key  = "GET /health"
-  target     = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /scholarships/health"
+  target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
+}
+
+# Applications Service
+
+# OPTIONS route for CORS
+resource "aws_apigatewayv2_route" "applications_options" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "OPTIONS /applications/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.applications.id}"
+}
+
+# Get Applications route
+resource "aws_apigatewayv2_route" "applications" {
+  api_id             = aws_apigatewayv2_api.main.id
+  route_key          = "ANY /applications/{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.applications.id}"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.main.id
+}
+
+# Health check route
+resource "aws_apigatewayv2_route" "applications_health" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /applications/health"
+  target    = "integrations/${aws_apigatewayv2_integration.applications.id}"
+}
+
+# Grading and Selection Service
+
+# OPTIONS route for CORS
+resource "aws_apigatewayv2_route" "grading_selection_options" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "OPTIONS /grading/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.grading_selection.id}"
+}
+
+# Get Grading and Selection route
+resource "aws_apigatewayv2_route" "grading_selection" {
+  api_id             = aws_apigatewayv2_api.main.id
+  route_key          = "ANY /grading/{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.grading_selection.id}"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.main.id
+}
+
+# Health check route
+resource "aws_apigatewayv2_route" "grading_selection_health" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /grading/health"
+  target    = "integrations/${aws_apigatewayv2_integration.grading_selection.id}"
 }
