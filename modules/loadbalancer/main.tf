@@ -124,7 +124,7 @@ resource "aws_lb_target_group" "scholarships_backend_tg" {
   target_type = "ip"
 
   health_check {
-    path = "/health"
+    path = "/scholarships/health"
   }
 }
 
@@ -137,7 +137,7 @@ resource "aws_lb_target_group" "applications_backend_tg" {
   target_type = "ip"
 
   health_check {
-    path = "/health"
+    path = "/applications/health"
   }
 }
 
@@ -150,7 +150,7 @@ resource "aws_lb_target_group" "grading_selection_backend_tg" {
   target_type = "ip"
 
   health_check {
-    path = "/health"
+    path = "/grading/health"
   }
 }
 
