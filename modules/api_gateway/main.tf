@@ -130,7 +130,7 @@ resource "aws_apigatewayv2_route" "scholarships_options" {
 # Get Public Scholarships route
 resource "aws_apigatewayv2_route" "scholarships" {
   api_id    = aws_apigatewayv2_api.main.id
-  route_key = "GET /scholarships/"
+  route_key = "GET /scholarships"
   target    = "integrations/${aws_apigatewayv2_integration.scholarships.id}"
 }
 
