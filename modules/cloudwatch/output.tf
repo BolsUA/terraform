@@ -8,11 +8,6 @@ output "cloudwatch_frontend_log_group_arn" {
   value       = aws_cloudwatch_log_group.frontend.arn
 }
 
-output "cloudwatch_people_backend_log_group_arn" {
-  description = "The arn of the CloudWatch Log Group for the People Backend service"
-  value       = aws_cloudwatch_log_group.people_backend.arn
-}
-
 output "cloudwatch_scholarships_backend_log_group_arn" {
   description = "The arn of the CloudWatch Log Group for the Scholarships Backend service"
   value       = aws_cloudwatch_log_group.scholarships_backend.arn

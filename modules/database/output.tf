@@ -3,16 +3,6 @@ output "rds_security_group_id" {
   value       = aws_security_group.rds.id
 }
 
-output "people_db_endpoint" {
-  description = "The endpoint of the People database"
-  value       = aws_db_instance.people_db.endpoint
-}
-
-output "people_db_connection_string" {
-  description = "The connection string for the People database"
-  value       = "postgresql://${var.people_db_username}:${var.people_db_password}@${aws_db_instance.people_db.endpoint}/${var.people_db_name}"
-}
-
 output "scholarships_db_endpoint" {
   description = "The endpoint of the Scholarships database"
   value       = aws_db_instance.scholarships_db.endpoint

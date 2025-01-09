@@ -29,31 +29,6 @@ resource "aws_db_subnet_group" "rds" {
   }
 }
 
-# Create RDS instance for people service
-resource "aws_db_instance" "people_db" {
-  identifier = "${var.app_name}-people-db-${var.environment}"
-
-  engine            = "postgres"
-  engine_version    = "16.4"
-  instance_class    = "db.t3.micro"
-  allocated_storage = 20
-
-  db_name  = var.people_db_name
-  username = var.people_db_username
-  password = var.people_db_password
-
-  db_subnet_group_name   = aws_db_subnet_group.rds.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
-
-  parameter_group_name = "default.postgres16"
-  skip_final_snapshot  = true
-
-  tags = {
-    Name        = "${var.app_name}-people-db"
-    Environment = var.environment
-  }
-}
-
 # Create RDS instance for scholarships service
 resource "aws_db_instance" "scholarships_db" {
   identifier = "${var.app_name}-scholarships-db-${var.environment}"

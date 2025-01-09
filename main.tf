@@ -57,10 +57,6 @@ module "database" {
   private_subnet_ids  = module.networking.private_subnet_ids
   allowed_cidr_blocks = [module.networking.vpc_cidr_block]
 
-  people_db_name     = var.people_db_name
-  people_db_username = var.people_db_username
-  people_db_password = var.people_db_password
-
   scholarships_db_name     = var.scholarships_db_name
   scholarships_db_username = var.scholarships_db_username
   scholarships_db_password = var.scholarships_db_password
@@ -93,7 +89,6 @@ module "loadbalancer" {
   certificate_arn = var.certificate_arn
 
   frontend_port                  = var.frontend_port
-  people_backend_port            = var.people_backend_port
   scholarships_backend_port      = var.scholarships_backend_port
   applications_backend_port      = var.applications_backend_port
   grading_selection_backend_port = var.grading_selection_backend_port
@@ -132,11 +127,6 @@ module "ecs" {
   auth_cognito_secret       = module.cognito.cognito_client_secret
   auth_cognito_issuer       = module.cognito.cognito_user_pool_issuer
   frontend_target_group_arn = module.loadbalancer.frontend_target_group_arn
-
-  # people_backend_repository_url   = module.ecr.people_backend_repository_url
-  # people_backend_port             = var.people_backend_port
-  # people_db_connection_string     = module.database.people_db_connection_string
-  # people_backend_target_group_arn = module.loadbalancer.people_backend_target_group_arn
 
   scholarships_backend_repository_url   = module.ecr.scholarships_backend_repository_url
   scholarships_backend_port             = var.scholarships_backend_port

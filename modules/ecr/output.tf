@@ -3,11 +3,6 @@ output "frontend_repository_url" {
   value       = aws_ecr_repository.frontend.repository_url
 }
 
-output "people_backend_repository_url" {
-  description = "URL of the people backend ECR repository"
-  value       = aws_ecr_repository.people_backend.repository_url
-}
-
 output "scholarships_backend_repository_url" {
   description = "URL of the scholarships backend ECR repository"
   value       = aws_ecr_repository.scholarships_backend.repository_url

@@ -34,11 +34,6 @@ variable "frontend_port" {
   default     = 80
 }
 
-variable "people_backend_port" {
-  type        = number
-  description = "People backend port for the ALB"
-}
-
 variable "scholarships_backend_port" {
   type        = number
   description = "Scholarships backend port for the ALB"

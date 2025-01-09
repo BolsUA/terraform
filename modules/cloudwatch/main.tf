@@ -34,17 +34,6 @@ resource "aws_cloudwatch_log_group" "frontend" {
   }
 }
 
-# People Backend Service CloudWatch Log Group
-resource "aws_cloudwatch_log_group" "people_backend" {
-  name              = "/ecs/${var.app_name}-people-backend-${var.environment}"
-  retention_in_days = 30
-
-  tags = {
-    Name        = "${var.app_name}-people-backend-logs"
-    Environment = var.environment
-  }
-}
-
 # Scholarships Backend Service CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "scholarships_backend" {
   name              = "/ecs/${var.app_name}-scholarships-backend-${var.environment}"

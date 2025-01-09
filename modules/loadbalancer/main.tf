@@ -38,13 +38,6 @@ resource "aws_security_group" "internal_alb" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = var.people_backend_port
-    to_port     = var.people_backend_port
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/24"]
-  }
-
-  ingress {
     from_port   = var.scholarships_backend_port
     to_port     = var.scholarships_backend_port
     protocol    = "tcp"

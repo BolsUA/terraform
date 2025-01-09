@@ -23,23 +23,6 @@ variable "allowed_cidr_blocks" {
   description = "List of CIDR blocks allowed to connect to RDS"
 }
 
-variable "people_db_name" {
-  type        = string
-  description = "Name of the people RDS database instance"
-}
-
-variable "people_db_username" {
-  type        = string
-  description = "Username for the people RDS instance"
-  sensitive   = true
-}
-
-variable "people_db_password" {
-  type        = string
-  description = "Password for the people RDS instance"
-  sensitive   = true
-}
-
 variable "scholarships_db_name" {
   type        = string
   description = "Name of the scholarships RDS database instance"

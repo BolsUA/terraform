@@ -9,17 +9,6 @@ resource "aws_ecr_repository" "frontend" {
   }
 }
 
-# ECR Repository for people service
-resource "aws_ecr_repository" "people_backend" {
-  name                 = "${var.app_name}-people-backend-${var.environment}"
-  image_tag_mutability = "MUTABLE"
-
-  tags = {
-    Name        = "${var.app_name}-people-backend"
-    Environment = var.environment
-  }
-}
-
 # ECR Repository for scholarships service
 resource "aws_ecr_repository" "scholarships_backend" {
   name                 = "${var.app_name}-scholarships-backend-${var.environment}"

@@ -29,26 +29,6 @@ variable "certificate_arn" {
 
 # Database variables
 
-variable "people_db_name" {
-  type        = string
-  description = "Name of the people RDS database instance"
-  default     = "people"
-}
-
-variable "people_db_username" {
-  type        = string
-  description = "Username for the people RDS instance"
-  sensitive   = true
-  default     = "people_user"
-}
-
-variable "people_db_password" {
-  type        = string
-  description = "Password for the people RDS instance"
-  sensitive   = true
-  default     = "people_password"
-}
-
 variable "scholarships_db_name" {
   type        = string
   description = "Name of the scholarships RDS database instance"
@@ -117,26 +97,20 @@ variable "frontend_port" {
   default     = 80
 }
 
-variable "people_backend_port" {
-  type        = number
-  description = "People backend port"
-  default     = 8000
-}
-
 variable "scholarships_backend_port" {
   type        = number
   description = "Scholarships backend port"
-  default     = 8001
+  default     = 8000
 }
 
 variable "applications_backend_port" {
   type        = number
   description = "Applications backend port"
-  default     = 8002
+  default     = 8001
 }
 
 variable "grading_selection_backend_port" {
   type        = number
   description = "Grading and selection backend port"
-  default     = 8003
+  default     = 8002
 }
