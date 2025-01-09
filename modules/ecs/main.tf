@@ -92,6 +92,20 @@ resource "aws_security_group" "ecs_tasks" {
     security_groups = [var.internal_alb_security_group_id]
   }
 
+  ingress {
+    from_port       = var.applications_backend_port
+    to_port         = var.applications_backend_port
+    protocol        = "tcp"
+    security_groups = [var.internal_alb_security_group_id]
+  }
+
+  ingress {
+    from_port       = var.grading_selection_backend_port
+    to_port         = var.grading_selection_backend_port
+    protocol        = "tcp"
+    security_groups = [var.internal_alb_security_group_id]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
