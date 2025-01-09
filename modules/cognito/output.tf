@@ -23,3 +23,8 @@ output "cognito_user_pool_issuer" {
   description = "The issuer of the Cognito User Pool"
   value       = "https://cognito-idp.${var.region}.amazonaws.com/${aws_cognito_user_pool.main.id}"
 }
+
+output "cognito_policy_arn" {
+  description = "The ARN of the IAM policy for Cognito"
+  value       = aws_iam_policy.cognito_policy.arn
+}

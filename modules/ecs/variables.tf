@@ -37,7 +37,13 @@ variable "private_subnet_ids" {
   description = "List of private subnet IDs for the ECS service"
 }
 
-# CloudWatch Logs ARN
+# Cognito Policy ARN
+variable "cognito_policy_arn" {
+  type        = string
+  description = "Cognito Policy ARN"
+}
+
+# CloudWatch Logs Policy ARN
 variable "cloudwatch_policy_arn" {
   type        = string
   description = "CloudWatch Logs Policy ARN"

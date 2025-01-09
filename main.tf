@@ -114,6 +114,7 @@ module "ecs" {
   internal_alb_security_group_id = module.loadbalancer.internal_alb_security_group_id
   private_subnet_ids             = module.networking.private_subnet_ids
 
+  cognito_policy_arn    = module.cognito.cognito_policy_arn
   cloudwatch_policy_arn = module.cloudwatch.cloudwatch_policy_arn
   s3_bucket_policy_arn  = module.s3.s3_bucket_policy_arn
   sqs_policy_arn        = module.sqs.sqs_policy_arn

@@ -11,16 +11,16 @@ resource "aws_cognito_user_pool" "main" {
   }
 
   # Add username attributes and auto verify email
-  username_attributes = ["email"]
+  username_attributes      = ["email"]
   auto_verified_attributes = ["email"]
 
   # Add schema attributes
   schema {
     name                = "name"
     attribute_data_type = "String"
-    mutable            = true
-    required           = true
-    
+    mutable             = true
+    required            = true
+
     string_attribute_constraints {
       min_length = 1
       max_length = 256
@@ -58,7 +58,7 @@ resource "aws_cognito_user_pool_client" "client" {
   user_pool_id = aws_cognito_user_pool.main.id
 
   generate_secret = true
-  
+
   # OAuth configuration
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_flows_user_pool_client = true
@@ -93,4 +93,35 @@ resource "aws_cognito_user_group" "proposers" {
   description  = "Users who can submit proposals of scholarships"
   user_pool_id = aws_cognito_user_pool.main.id
   precedence   = 3
+}
+
+resource "aws_iam_policy" "cognito_policy" {
+  name = "${var.app_name}-cognito-policy-${var.environment}"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cognito-idp:ListUsers",
+          "cognito-idp:AdminGetUser",
+          "cognito-idp:AdminListGroupsForUser",
+          "cognito-idp:ListUsersInGroup",
+          "cognito-idp:AdminListUserAuthEvents",
+          "cognito-idp:GetGroup",
+          "cognito-idp:ListGroups",
+          "cognito-idp:DescribeUserPoolClient",
+          "cognito-idp:GetUserPoolMfaConfig",
+          "cognito-idp:AdminUserGlobalSignOut",
+          "cognito-idp:AdminUpdateUserAttributes",
+          "cognito-idp:DescribeUserPool"
+        ]
+        Resource = [
+          aws_cognito_user_pool.main.arn,
+          "${aws_cognito_user_pool.main.arn}/client/${aws_cognito_user_pool_client.client.id}",
+        ]
+      }
+    ]
+  })
 }

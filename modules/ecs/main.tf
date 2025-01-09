@@ -36,6 +36,12 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Attach the Cognito policy to the task execution role
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_cognito" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.cognito_policy_arn
+}
+
 # Attach the CloudWatch Logs policy to the task execution role
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_cloudwatch" {
   role       = aws_iam_role.ecs_task_execution_role.name
