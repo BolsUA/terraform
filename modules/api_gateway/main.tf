@@ -92,7 +92,7 @@ resource "aws_apigatewayv2_authorizer" "main" {
 resource "aws_apigatewayv2_integration" "scholarships" {
   api_id             = aws_apigatewayv2_api.main.id
   integration_type   = "HTTP_PROXY"
-  integration_uri    = var.alb_internal_listener_http_arn
+  integration_uri    = var.alb_internal_listener_scholarships_arn
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
   connection_id      = aws_apigatewayv2_vpc_link.main.id
@@ -101,7 +101,7 @@ resource "aws_apigatewayv2_integration" "scholarships" {
 resource "aws_apigatewayv2_integration" "applications" {
   api_id             = aws_apigatewayv2_api.main.id
   integration_type   = "HTTP_PROXY"
-  integration_uri    = var.alb_internal_listener_http_arn
+  integration_uri    = var.alb_internal_listener_applications_arn
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
   connection_id      = aws_apigatewayv2_vpc_link.main.id
@@ -110,7 +110,7 @@ resource "aws_apigatewayv2_integration" "applications" {
 resource "aws_apigatewayv2_integration" "grading_selection" {
   api_id             = aws_apigatewayv2_api.main.id
   integration_type   = "HTTP_PROXY"
-  integration_uri    = var.alb_internal_listener_http_arn
+  integration_uri    = var.alb_internal_listener_grading_selection_arn
   integration_method = "ANY"
   connection_type    = "VPC_LINK"
   connection_id      = aws_apigatewayv2_vpc_link.main.id

@@ -169,7 +169,7 @@ resource "aws_lb_listener" "listener_http" {
 }
 
 # Internal HTTP Listener for the API Gateway
-resource "aws_lb_listener" "internal_listener_http" {
+resource "aws_lb_listener" "internal_listener_scholarships" {
   load_balancer_arn = aws_lb.internal_main.arn
   port              = var.scholarships_backend_port
   protocol          = "HTTP"

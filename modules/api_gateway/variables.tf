@@ -44,10 +44,21 @@ variable "internal_alb_security_group_id" {
   description = "Internal ALB security group ID"
 }
 
-variable "alb_internal_listener_http_arn" {
+variable "alb_internal_listener_scholarships_arn" {
   type        = string
-  description = "The ARN of the internal HTTP listener"
+  description = "The ARN of the internal HTTP listener for the scholarships service"
 }
+
+variable "alb_internal_listener_applications_arn" {
+  type        = string
+  description = "The ARN of the internal HTTP listener for the applications service"
+}
+
+variable "alb_internal_listener_grading_selection_arn" {
+  type        = string
+  description = "The ARN of the internal HTTP listener for the grading selection service"
+}
+
 
 # Private subnet IDs
 variable "private_subnet_ids" {

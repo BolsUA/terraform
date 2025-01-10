@@ -157,10 +157,12 @@ module "api_gateway" {
 
   certificate_arn = var.certificate_arn
 
-  cloudwatch_api_gateway_log_group_arn = module.cloudwatch.cloudwatch_api_gateway_log_group_arn
-  internal_alb_security_group_id       = module.loadbalancer.internal_alb_security_group_id
-  alb_internal_listener_http_arn       = module.loadbalancer.alb_internal_listener_http_arn
-  private_subnet_ids                   = module.networking.private_subnet_ids
-  cognito_client_id                    = module.cognito.cognito_client_id
-  cognito_user_pool_issuer             = module.cognito.cognito_user_pool_issuer
+  cloudwatch_api_gateway_log_group_arn        = module.cloudwatch.cloudwatch_api_gateway_log_group_arn
+  internal_alb_security_group_id              = module.loadbalancer.internal_alb_security_group_id
+  alb_internal_listener_scholarships_arn      = module.loadbalancer.alb_internal_listener_scholarships_arn
+  alb_internal_listener_applications_arn      = module.loadbalancer.alb_internal_listener_applications_arn
+  alb_internal_listener_grading_selection_arn = module.loadbalancer.alb_internal_listener_grading_selection_arn
+  private_subnet_ids                          = module.networking.private_subnet_ids
+  cognito_client_id                           = module.cognito.cognito_client_id
+  cognito_user_pool_issuer                    = module.cognito.cognito_user_pool_issuer
 }
